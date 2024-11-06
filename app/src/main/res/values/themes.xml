@@ -1,9 +1,17 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+
+    <!-- Base application theme for Android >=12 -->
     <style name="Base.Theme.NavigationDrawer" parent="Theme.Material3.DayNight">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+
+        <!--        Add this item to disable splash screen-->
+        <!--        <item name="android:windowIsTranslucent">true</item>-->
+
+        <item name="android:windowSplashScreenBackground">@color/white</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/cat</item>
+        <item name="android:windowSplashScreenAnimationDuration">2000</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@color/white</item>
     </style>
 
     <style name="Theme.NavigationDrawer" parent="Base.Theme.NavigationDrawer" />
+
 </resources>
