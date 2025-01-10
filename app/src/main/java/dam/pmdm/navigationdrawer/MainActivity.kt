@@ -1,26 +1,39 @@
 package dam.pmdm.navigationdrawer
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.animation.doOnEnd
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.findFragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import dam.pmdm.navigationdrawer.databinding.ActivityMainBinding
+import dam.pmdm.navigationdrawer.databinding.GuideBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var binding: ActivityMainBinding
+    private lateinit var guideBinding: GuideBinding
     private lateinit var navController: NavController
+
+    private var needToStartGuide: Boolean = true
+    private var stepGuide: Int = 0;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
+        guideBinding = binding.includeLayout
         setContentView(binding.root)
 
         // Obtener el NavController desde el NavHostFragment
@@ -28,13 +41,56 @@ class MainActivity : AppCompatActivity() {
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 
+
+        // Configurar el icono del menú en la ActionBar
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        initializeGuide()
+
+
 //        Configurar menu toogle
         configureToggleMenu();
         // Configurar la navegación
         configureNavigation();
 
-        // Configurar el icono del menú en la ActionBar
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    private fun initializeGuide() {
+        guideBinding.exitGuide.setOnClickListener (::onExitGuide)
+
+        if (needToStartGuide){
+            binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+            guideBinding.guideLayout.visibility = View.VISIBLE
+
+
+            val scaleX = ObjectAnimator.ofFloat(guideBinding.pulseImage, "scaleX", 1f, 0.5f)
+            val scaleY = ObjectAnimator.ofFloat(guideBinding.pulseImage, "scaleY", 1f, 0.5f)
+
+            val fadeIn = ObjectAnimator.ofFloat(guideBinding.textStep, "alpha", 0f, 1f)
+
+            scaleX.repeatCount = 3
+            scaleY.repeatCount = 3
+            val animatorSet = AnimatorSet()
+            animatorSet.play(scaleX).with(scaleY).before(fadeIn)
+
+
+            animatorSet.duration = 1000 // Duración de la animación
+            animatorSet.start()
+            animatorSet.doOnEnd {
+                binding.drawerLayout.open()
+                guideBinding.pulseImage.visibility = View.GONE
+                guideBinding.textStep.visibility = View.VISIBLE
+            }
+
+        }
+    }
+
+    private fun onExitGuide(view: View?) {
+
+        binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+        guideBinding.guideLayout.visibility = View.GONE
+        binding.drawerLayout.close()
 
     }
 
