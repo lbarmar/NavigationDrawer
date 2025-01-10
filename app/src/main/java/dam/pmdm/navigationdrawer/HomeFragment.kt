@@ -21,18 +21,7 @@ class HomeFragment : Fragment() {
 
         binding = FragmentHomeBinding.inflate(inflater, container, false) // Inicializar binding
 
-        initialiceSpinner()
         return binding.root // Retornar la vista raíz
     }
 
-    private fun initialiceSpinner() {
-        val adapter: ArrayAdapter<CharSequence> = ArrayAdapter.createFromResource(
-            requireContext(), R.array.animals, R.layout.spinner_item
-        )
-        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
-        binding.spinner.adapter = adapter
-
-        // Asignar el adaptador al Spinner
-        binding.spinner.adapter = adapter
-    }
 }
