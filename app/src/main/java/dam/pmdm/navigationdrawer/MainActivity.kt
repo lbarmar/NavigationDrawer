@@ -2,6 +2,8 @@ package dam.pmdm.navigationdrawer
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.media.MediaPlayer
+import android.media.SoundPool
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -90,8 +92,23 @@ class MainActivity : AppCompatActivity() {
 
     private fun onExitGuide(view: View?) {
         needToStartGuide = false;
-        binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-        guideBinding.guideLayout.visibility = View.GONE
+
+//        val soundPool = SoundPool.Builder().setMaxStreams(1).build()
+//        val soundId = soundPool.load(this, R.raw.pulse, 1)
+//
+//        soundPool.setOnLoadCompleteListener { _, _, status ->
+//            if (status == 0) {  // Carga exitosa
+//                soundPool.play(soundId, 1f, 1f, 0, 0, 1f)
+//            }
+//        }
+
+        val mediaPlayer = MediaPlayer.create(this, R.raw.pulse)
+        mediaPlayer.start()
+        mediaPlayer.setOnCompletionListener {
+            mediaPlayer.release()
+            binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+            guideBinding.guideLayout.visibility = View.GONE
+        }
     }
 
     private fun configureToggleMenu() {
