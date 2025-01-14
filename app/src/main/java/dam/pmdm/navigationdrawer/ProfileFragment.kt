@@ -16,7 +16,10 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
-//        return inflater.inflate(R.layout.fragment_profile, container, false)
+
+        binding.videoView.setVideoPath("android.resource://dam.pmdm.navigationdrawer/${R.raw.agua}")
+        binding.videoView.start()
+
         return binding.root
     }
 }
