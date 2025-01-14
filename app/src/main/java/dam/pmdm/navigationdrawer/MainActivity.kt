@@ -57,9 +57,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeGuide() {
-        guideBinding.exitGuide.setOnClickListener (::onExitGuide)
+        guideBinding.exitGuide.setOnClickListener(::onExitGuide)
 
-        if (needToStartGuide){
+        if (needToStartGuide) {
             binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
             guideBinding.guideLayout.visibility = View.VISIBLE
 
@@ -78,20 +78,20 @@ class MainActivity : AppCompatActivity() {
             animatorSet.duration = 1000 // Duración de la animación
             animatorSet.start()
             animatorSet.doOnEnd {
-                binding.drawerLayout.open()
-                guideBinding.pulseImage.visibility = View.GONE
-                guideBinding.textStep.visibility = View.VISIBLE
+                if (needToStartGuide) {
+                    binding.drawerLayout.open()
+                    guideBinding.pulseImage.visibility = View.GONE
+                    guideBinding.textStep.visibility = View.VISIBLE
+                }
             }
 
         }
     }
 
     private fun onExitGuide(view: View?) {
-
+        needToStartGuide = false;
         binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
         guideBinding.guideLayout.visibility = View.GONE
-        binding.drawerLayout.close()
-
     }
 
     private fun configureToggleMenu() {
